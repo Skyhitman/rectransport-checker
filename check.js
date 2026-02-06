@@ -1,5 +1,5 @@
 const TELEGRAM_TOKEN = process.env.TG_TOKEN;
-const CHAT_ID = process.env.TG_CHAT;
+const CHAT_ID = process.env.CHAT_ID;  // ✅ FIXED THIS LINE
 
 const times = ["10", "3", "5"];
 const daysToFetch = 1;
