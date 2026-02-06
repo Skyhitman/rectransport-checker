@@ -1,4 +1,6 @@
-const fetch = require("node-fetch");
+const response = await fetch(url);
+const html = await response.text();
+
 
 // ================== CONFIG ==================
 const TG_TOKEN = process.env.TG_TOKEN;
