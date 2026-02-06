@@ -1,8 +1,9 @@
-import fetch from "node-fetch";
+const fetch = require("node-fetch");
 
 // ================== CONFIG ==================
 const TG_TOKEN = process.env.TG_TOKEN;
 const CHAT_ID = process.env.CHAT_ID;
+
 
 const times = ["10", "3", "5"];
 const baseUrl = "https://rectransport.com/xam/";
