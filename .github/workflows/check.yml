@@ -19,10 +19,12 @@ jobs:
           node-version: 18
 
       - name: Install dependencies
-        run: npm install node-fetch
+        run: |
+          npm init -y
+          npm install node-fetch
 
       - name: Run checker
-        run: node check.js
         env:
           TG_TOKEN: ${{ secrets.TG_TOKEN }}
-          TG_CHAT: ${{ secrets.TG_CHAT }}
+          CHAT_ID: ${{ secrets.CHAT_ID }}
+        run: node check.js
