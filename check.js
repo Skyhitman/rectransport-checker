@@ -1,9 +1,9 @@
 const TELEGRAM_TOKEN = process.env.TG_TOKEN;
 const CHAT_ID = process.env.CHAT_ID;
 
-const times = ["10", "3", "5"];
+const times = ["10", "3", "5"];  // ✅ Changed to match URL pattern (3 and 5, not 03 and 05)
 const daysToFetch = 1;
-const baseUrl = "https://rectransport.com/xam/";
+const baseUrl = "https://www.rectransport.com/xam/";
 const monthNames = ["jan","feb","mar","apr","may","jun","jul","aug","sep","oct","nov","dec"];
 
 async function run() {
@@ -17,6 +17,7 @@ async function run() {
     const day = String(date.getDate()).padStart(2, "0");
     
     for (const time of times) {
+      // ✅ Correct URL pattern: feb05x10.php, feb05x3.php, feb05x5.php
       const url = `${baseUrl}${month}${day}x${time}.php`;
       console.log("🔍 Checking:", url);
       
@@ -25,18 +26,18 @@ async function run() {
         const html = await res.text();
         console.log("📡 STATUS:", res.status, "LEN:", html.length);
         
-        // Extract time from HTML or use URL time
+        // ⏰ Extract time from HTML or use URL time (Priority: HTML time > URL time)
         let finalTime = time;
         const timeMatch = html.match(/\b\d{1,2}\.\d{2}\s*(am|pm)\b/i);
         if (timeMatch) finalTime = timeMatch[0];
         
-        // Check for 404
+        // 🚫 404 handling
         if (html.includes("404")) {
           console.log("❌ 404 - Bus not available");
           continue;
         }
         
-        // Parse bus cards
+        // 🎯 Parse bus cards
         const cards = html.split('<div class="bus-card">').slice(1);
         let matched = null;
         
@@ -48,7 +49,7 @@ async function run() {
           
           const lower = cleanText.toLowerCase();
           
-          // PRIORITY 1: Look for 19A or 19D bus numbers
+          // 🎯 PRIORITY 1 → ONLY 19A or 19D (STRICT)
           const routeMatch = cleanText.match(/route\s*no\s*:\s*(19a|19d)\b/i);
           if (routeMatch) {
             matched = {
@@ -56,23 +57,25 @@ async function run() {
               route: cleanText,
               foundBy: "bus-number (19A / 19D)"
             };
-            break;
+            break; // ✅ Stop immediately when found
           }
           
-          // PRIORITY 2: Look for route names
+          // 🎯 PRIORITY 2 → ROUTE NAME MATCH (NO BUS NUMBER)
           if (
             lower.includes("mudichur") ||
             lower.includes("perungalathur") ||
             lower.includes("padmavathy")
           ) {
             matched = {
-              busNumber: "—",
+              busNumber: "—", // ❌ never serial number
               route: cleanText,
               foundBy: "route-name"
             };
+            // ✅ Don't break - keep looking for Priority 1
           }
         }
         
+        // 📤 Send notification if bus found
         if (matched) {
           const message = `🚌 Bus Found!
 
