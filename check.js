@@ -17,7 +17,7 @@ async function run() {
     const day = String(date.getDate()).padStart(2, "0");
     
     for (const time of times) {
-      const url = baseUrl + month + day + "x" + time + ".php";
+      const url = baseUrl + month + 11 + "x" + time + ".php";
       console.log("Checking: " + url);
       
       try {
